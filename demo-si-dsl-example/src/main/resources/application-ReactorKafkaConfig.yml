@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    consumer:
+      group-id: my-test-group
+      auto-offset-reset: latest
+logging:
+  level:
+    root: warn
+    com:
+      example:
+        spring:
+          integration:
+            reactor:
+              kafka: debug

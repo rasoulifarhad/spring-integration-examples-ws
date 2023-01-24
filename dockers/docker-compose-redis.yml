@@ -1,0 +1,11 @@
+version: '2'
+services:
+  redis:
+    image: redis
+    container_name: redis
+    expose:
+      - 6379
+    ports:
+      - 6379:6379
+
+

@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "demo-si-dsl-example",
+			"path": "demo-si-dsl-example"
+		},
+		{
+			"name": "demo-spring-integration-kafka-dsl",
+			"path": "demo-spring-integration-kafka-dsl"
+		},
+		{
+			"name": "demo-spring-integration-kafka-in-out-dsl",
+			"path": "demo-spring-integration-kafka-in-out-dsl"
+		},
+		{
+			"path": "../spring-flo-old/spring-flo/samples/spring-flo-si"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"gradle.nestedProjects": true,
+		"java.dependency.packagePresentation": "hierarchical",
+		"java.maven.downloadSources": true
+	}
+}

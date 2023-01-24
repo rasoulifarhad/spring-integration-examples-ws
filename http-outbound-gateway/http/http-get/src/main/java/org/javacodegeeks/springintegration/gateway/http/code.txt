@@ -1,0 +1,70 @@
+mvn dependency:purge-local-repository
+https://stackoverflow.com/questions/20740703
+
+	<int:channel id="get_send_channel" />
+
+	<int:channel id="get_receive_channel">
+		<int:queue capacity='10' />
+	</int:channel>
+
+	<int-http:outbound-gateway
+		id="get.outbound.gateway" request-channel="get_send_channel"
+		url="http://localhost:8080/incomes" http-method="GET"
+		reply-channel="get_receive_channel"
+		expected-response-type="java.lang.String">
+	</int-http:outbound-gateway>
+
+	<int:channel id="post_receive_channel">
+		<int:queue capacity='10' />
+	</int:channel>
+
+	<bean id="headerMapper"
+		class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
+		<property name="Content-Type" value="application/json; charset=utf8" />
+	</bean>
+
+@SpringBootApplication
+@ImportResource("http-outbound-gateway.xml")
+
+	@Autowired
+	@Qualifier("get_send_channel")
+	MessageChannel getSendChannel;
+
+	@Autowired
+	@Qualifier("get_receive_channel")
+	PollableChannel getReceiveChannel;
+
+	@Autowired
+	@Qualifier("post_send_channel")
+	MessageChannel postSendChannel;
+
+	@Autowired
+	@Qualifier("post_receive_channel")
+	PollableChannel postReceiveChannel;
+
+			Message<?> message = MessageBuilder.withPayload("").build();
+			getSendChannel.send(message);
+			System.out.println(getReceiveChannel.receive().getPayload());
+
+
+			Message<?> message = MessageBuilder.withPayload(postMap).build();
+			postSendChannel.send(message);
+			System.out.println(postReceiveChannel.receive().getPayload());
+
+
+	@Bean
+	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+		return args -> {
+
+			ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("http-outbound-gateway.xml");
+
+			Map<String, String> postMap = new HashMap<String, String>();
+			postMap.put("description", "Second Income");
+			postMap.put("amount", "2000");
+
+			RequestGateway rg = context.getBean("requestGateway", RequestGateway.class);
+			System.out.println(rg.echo(postMap));
+
+			context.close();
+		};
+	}
